@@ -1,4 +1,4 @@
-package main
+package pos
 
 import (
 	"crypto/rand"
