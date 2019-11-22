@@ -47,12 +47,10 @@ type superNode struct {
 }
 //投票节点池
 var voteNodesPool []node
-//超级节点池
-var superNodesPool []superNode
+//竞选节点池
+var starNodesPool []superNode
 //获胜，可以挖矿的超级节点池
-var mineSuperNodesPool []superNode
-//随机节点池
-var randNodesPool []superNode
+var superStarNodesPool []superNode
 //生成新的区块
 func generateNewBlock(oldBlock block,data string,address string) block {
 	newBlock:=block{}
@@ -60,7 +58,7 @@ func generateNewBlock(oldBlock block,data string,address string) block {
 	newBlock.data = data
 	newBlock.timestamp = time.Now().Format("2006-01-02 15:04:05")
 	newBlock.height = oldBlock.height + 1
-	newBlock.address = getMineNodeAddress()
+	newBlock.address = address
 	newBlock.getHash()
 	return newBlock
 }
@@ -70,31 +68,24 @@ func ( b *block) getHash () {
 	hash:=sha256.Sum256([]byte(sumString))
 	b.hash = hex.EncodeToString(hash[:])
 }
-//随机挖矿节点
-func getMineNodeAddress() string{
-	bInt:=big.NewInt(int64(len(randNodesPool)))
-	rInt,err:=rand.Int(rand.Reader,bInt)
-	if err != nil {
-		log.Panic(err)
-	}
-	return randNodesPool[int(rInt.Int64())].address
-}
 
+
+//投票
 func voting() {
 	for _,v:=range voteNodesPool {
-		rInt,err:=rand.Int(rand.Reader,big.NewInt(superNodeNum))
+		rInt,err:=rand.Int(rand.Reader,big.NewInt(superNodeNum+1))
 		if err != nil {
 			log.Panic(err)
 		}
-		superNodesPool[int(rInt.Int64())].votes += v.votes
+		starNodesPool[int(rInt.Int64())].votes += v.votes
 	}
 }
 //对挖矿节点进行排序
 func sortMineNodes() {
-	sort.Slice(superNodesPool, func(i, j int) bool {
-		return superNodesPool[i].votes > superNodesPool[j].votes
+	sort.Slice(starNodesPool, func(i, j int) bool {
+		return starNodesPool[i].votes > starNodesPool[j].votes
 	})
-	mineSuperNodesPool = superNodesPool[:mineSuperNodeNum]
+	superStarNodesPool = starNodesPool[:mineSuperNodeNum]
 }
 
 
@@ -110,24 +101,45 @@ func init() {
 	}
 	//初始化超级节点
 	for i:=0;i<=superNodeNum;i++ {
-		superNodesPool = append(superNodesPool,superNode{node{0,"超级节点"+strconv.Itoa(i)}})
+		starNodesPool = append(starNodesPool,superNode{node{0,"超级节点"+strconv.Itoa(i)}})
 	}
 }
 
 func main() {
+	fmt.Println("初始化",voteNodeNum,"个投票节点...")
+	time.Sleep(time.Second*2)
+	fmt.Println(voteNodesPool)
+	time.Sleep(time.Second*2)
+	fmt.Println("当前存在的",superNodeNum,"个竞选节点")
+	fmt.Println(starNodesPool)
+	time.Sleep(time.Second*2)
+	fmt.Println("进行投票...")
+	time.Sleep(time.Second*2)
+	voting()
+	time.Sleep(time.Second*2)
+	fmt.Println("结束投票，查看竞选节点们获得票数...")
+	time.Sleep(time.Second*2)
+	fmt.Println(starNodesPool)
+	time.Sleep(time.Second*2)
+	fmt.Println("对竞选节点进行排序，前",mineSuperNodeNum,"名，当选超级节点")
+	time.Sleep(time.Second*2)
+	sortMineNodes()
+	fmt.Println(superStarNodesPool)
+	time.Sleep(time.Second*2)
+	fmt.Println("开始挖矿...")
+	time.Sleep(time.Second*2)
 	genesisBlock := block{"0000000000000000000000000000000000000000000000000000000000000000","",time.Now().Format("2006-01-02 15:04:05"),"我是创世区块",1,"0000000000"}
 	genesisBlock.getHash()
 	blockchain = append(blockchain,genesisBlock)
 	fmt.Println(blockchain[0])
-	i:=0
-	j:=0
+	i,j:=0,0
 	for  {
 		time.Sleep(time.Second)
-		newBlock:=generateNewBlock(blockchain[i],"我是区块内容",mineSuperNodesPool[j].address)
+		newBlock:=generateNewBlock(blockchain[i],"我是区块内容",superStarNodesPool[j].address)
 		blockchain = append(blockchain,newBlock)
 		fmt.Println(blockchain[i + 1])
 		i++
 		j++
-		j = j % len(mineSuperNodesPool)
+		j = j % len(superStarNodesPool)
 	}
 }
