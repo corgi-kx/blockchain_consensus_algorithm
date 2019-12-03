@@ -31,7 +31,7 @@ func (rf *Raft) getRequest(writer http.ResponseWriter, request *http.Request) {
 			log.Panic(err)
 		}
 		fmt.Println("消息是否已发送到领导者：", b)
-		writer.Write([]byte("ok！！！"))
+		writer.Write([]byte("ok!!!"))
 	}
 }
 

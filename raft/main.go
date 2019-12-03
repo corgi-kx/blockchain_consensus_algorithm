@@ -9,10 +9,6 @@ import (
 
 //定义节点数量
 var raftCount = 3
-
-//本节点收到的投票数量
-var vote int
-
 //节点池
 var nodeTable map[string]string
 
@@ -78,7 +74,8 @@ Circle:
 			fmt.Printf("心跳检测超时，已超过%d秒\n", raft.timeout)
 			fmt.Println("即将重新开启选举")
 			raft.reDefault()
-			raft.currentLeader = "-1"
+			raft.setCurrentLeader("-1")
+			raft.lastHeartBeartTime = 0
 			goto Circle
 		}
 	}

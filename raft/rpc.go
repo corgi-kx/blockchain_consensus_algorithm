@@ -50,11 +50,11 @@ func (rf *Raft) broadcast(method string, args interface{}, fun func(ok bool)) {
 
 //投票
 func (rf *Raft) Vote(node NodeInfo, b *bool) error {
-	if rf.votedFor != "-1" && rf.currentLeader != "-1" {
+	if rf.votedFor != "-1" || rf.currentLeader != "-1" {
 		*b = false
 	} else {
+		rf.setVoteFor(node.ID)
 		fmt.Printf("投票成功，已投%s节点\n", node.ID)
-		rf.votedFor = node.ID
 		*b = true
 	}
 	return nil
@@ -62,7 +62,7 @@ func (rf *Raft) Vote(node NodeInfo, b *bool) error {
 
 //确认领导者
 func (rf *Raft) ConfirmationLeader(node NodeInfo, b *bool) error {
-	rf.currentLeader = node.ID
+	rf.setCurrentLeader(node.ID)
 	*b = true
 	fmt.Println("已发现网络中的领导节点，", node.ID, "成为了领导者！\n")
 	rf.reDefault()
@@ -71,7 +71,7 @@ func (rf *Raft) ConfirmationLeader(node NodeInfo, b *bool) error {
 
 //心跳检测回复
 func (rf *Raft) HeartbeatRe(node NodeInfo, b *bool) error {
-	rf.currentLeader = node.ID
+	rf.setCurrentLeader(node.ID)
 	rf.lastHeartBeartTime = millisecond()
 	fmt.Printf("接收到来自领导节点%s的心跳检测\n", node.ID)
 	fmt.Printf("当前时间为:%d\n\n", millisecond())
@@ -127,6 +127,7 @@ func (rf *Raft) LeaderReceiveMessage(message Message, b *bool) error {
 			fmt.Printf("全网已超过半数节点接收到消息id：%d\nraft验证通过，可以打印消息，id为：%d\n",message.MsgID,message.MsgID)
 			fmt.Println("消息为：", MessageStore[message.MsgID],"\n")
 			rf.lastMessageTime = millisecond()
+			fmt.Println("准备将消息提交信息发送至客户端...")
 			go rf.broadcast("Raft.ConfirmationMessage", message, func(ok bool) {
 			})
 			break
