@@ -5,7 +5,6 @@
 
 <hr>
 
-源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/raft](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/raft)
 
 本demo为raft的代码实现，如果想了解raft的详细信息请自行谷歌<br>
 本demo展示了raft的部分功能，写的并不严谨，仅作为对raft的了解用途
