@@ -1,7 +1,4 @@
->参考资料：
-> - http://thesecretlivesofdata.com/raft/
-> - https://www.cnblogs.com/mindwind/p/5231986.html
-> - https://blog.csdn.net/s15738841819/article/details/84286276
+>**&ensp;&ensp;&ensp;邮箱:mikesen1994@gmail.com   &ensp;&ensp;&ensp;&ensp;  &ensp;&ensp; &ensp;&ensp; vx:965952482**
 
 <hr>
 
@@ -58,4 +55,10 @@
 结果发现可以打印的，因为新的领导者A、追随者C并没有宕机，A收到了C的回馈(2>3/2)超过了全网一半的节点，所以是可以进行打印数据的
 
 ##### 7.重新启动节点B，B自动变为追随者状态，并接收来自新的领导者A的心跳检测
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203160614830.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2019120409014310.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+<hr>
+
+>参考资料：
+> - http://thesecretlivesofdata.com/raft/
+> - https://www.cnblogs.com/mindwind/p/5231986.html
+> - https://blog.csdn.net/s15738841819/article/details/84286276
