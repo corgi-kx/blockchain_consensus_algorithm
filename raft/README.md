@@ -7,14 +7,14 @@
 
 源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/raft](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/raft)
 
-本demo为raft的代码实现，如果想了解raft的详细信息请自行谷歌
+本demo为raft的代码实现，如果想了解raft的详细信息请自行谷歌<br>
 本demo展示了raft的部分功能，写的并不严谨，仅作为对raft的了解用途
 <br>
 
 ## 实现功能：
 
  - 节点状态分为Leader（领导者）、Follower（追随者）、Candidate（候选人）
- - 节点间随机选举出Leader且同时仅存在一个Leader
+ - 节点间随机成为candidate状态并选举出Leader，且同时仅存在一个Leader
  - Leader节点定时发送心跳检测至其他Follower节点
  - Follower节点们超过一定时间未收到心跳检测，则Follower节点们重新开启选举
  - 客户端通过http发送消息到节点A，如果A不是Leader则转发至Leader节点
