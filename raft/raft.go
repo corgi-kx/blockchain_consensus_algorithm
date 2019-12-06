@@ -193,7 +193,7 @@ func (rf *Raft) setStatus(state int) {
 	rf.lock.Unlock()
 }
 
-//设置投票数量
+//投票累加
 func (rf *Raft) voteAdd() {
 	rf.lock.Lock()
 	rf.vote++
