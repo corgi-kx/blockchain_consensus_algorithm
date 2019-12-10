@@ -12,7 +12,7 @@
 
 <br>
 
-![在这里插入图片描述](./images/流程图.webp)
+![在这里插入图片描述](images/流程图.webp)
 ## 实现功能：
 >pbft公式：  n>=3f + 1  其中n为全网总节点数量，f为最多允许的作恶、故障节点
 
@@ -45,15 +45,15 @@
 ##### 2.开启五个端口（一个客户端，四个节点）
 客户端执行pbft.exe client  
 其他四个节点依次执行 pbft.exe N0  pbft.exe N1  pbft.exe N2  pbft.exe N3
-![在这里插入图片描述](./images/启动.png)
+![在这里插入图片描述](images/启动.png)
 ##### 3.输入一段信息，看看节点之间的同步过程
-![在这里插入图片描述](./images/启动后.png)
+![在这里插入图片描述](images/启动后.png)
 ##### 4.关闭一个节点（代表作恶、故障节点），再次输入信息，看看是否还会接收到reply
 可以看到，客户端依然会接收到reply，因为根据公式 n >= 3f+1  ，就算宕机一个节点，系统依然能顺利运行
-![](./images/掉了一个节点后.png)
+![](images/掉了一个节点后.png)
 ##### 4.关闭两个节点（代表作恶、故障节点），再次输入信息，看看是否还会接收到reply
 可以看到，关闭两个节点后，故障节点已经超出了pbft的允许数量，消息进行到Prepare阶段由于接收不到满足数量的信息，固系统不再进行commit确认,客户端也接收不到reply
-![在这里插入图片描述](./images/关闭两个节点.png)
+![在这里插入图片描述](images/关闭两个节点.png)
 
 >**&ensp;&ensp;&ensp;建了个QQ群：722124200     有问题可以加群互相讨论   ：）**
 >**&ensp;&ensp;&ensp;邮箱:mikesen1994@gmail.com   &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; &ensp;&ensp; &ensp;&ensp;&ensp;&ensp; &ensp; vx:965952482**
