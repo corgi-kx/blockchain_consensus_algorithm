@@ -45,7 +45,7 @@ func (rf *Raft) httpListen() {
 	}
 }
 
-//返回一个十位数的随机数，作为消息id
+//返回一个十位数的随机数，作为消息idgit
 func getRandom() int {
 	x := big.NewInt(10000000000)
 	for {

@@ -31,12 +31,12 @@ func clientTcpListen() {
 }
 
 //节点使用的tcp监听
-func (p *pbft) tcpListen(addr string) {
-	listen, err := net.Listen("tcp", addr)
+func (p *pbft) tcpListen() {
+	listen, err := net.Listen("tcp", p.node.addr)
 	if err != nil {
 		log.Panic(err)
 	}
-	fmt.Printf("节点开启监听，地址：%s\n", addr)
+	fmt.Printf("节点开启监听，地址：%s\n",  p.node.addr)
 	defer listen.Close()
 
 	for {
@@ -48,19 +48,22 @@ func (p *pbft) tcpListen(addr string) {
 		if err != nil {
 			log.Panic(err)
 		}
-		go p.handleRequest(b)
+		 p.handleRequest(b)
 	}
 
 }
 
+//使用tcp发送消息
 func tcpDial(context []byte, addr string) {
 	conn, err := net.Dial("tcp", addr)
 	if err != nil {
-		log.Fatal("connect error", err)
+		log.Println("connect error", err)
+		return
 	}
-	defer conn.Close()
+
 	_, err = conn.Write(context)
 	if err != nil {
 		log.Fatal(err)
 	}
+	conn.Close()
 }

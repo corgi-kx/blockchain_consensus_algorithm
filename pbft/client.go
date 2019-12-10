@@ -18,12 +18,12 @@ func clientSendMessageAndListen() {
 	fmt.Printf("客户端开启监听，地址：%s\n", clientAddr)
 
 	fmt.Println(" ---------------------------------------------------------------------------------")
-	fmt.Println("|  已进入PBFT测试Demo客户端，请慢点发信息，让子弹飞一会，否则程序崩溃概不负责 :)  |")
+	fmt.Println("|  已进入PBFT测试Demo客户端，请启动全部节点后再发送消息！ :)  |")
 	fmt.Println(" ---------------------------------------------------------------------------------")
+	fmt.Println("请在下方输入要存入节点的信息：")
     //首先通过命令行获取用户输入
 	stdReader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("> ")
 		data, err := stdReader.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading from stdin")
@@ -49,7 +49,7 @@ func clientSendMessageAndListen() {
 
 
 
-//返回一个十位数的随机数，作为消息id
+//返回一个十位数的随机数，作为msgid
 func getRandom() int {
 	x := big.NewInt(10000000000)
 	for {
