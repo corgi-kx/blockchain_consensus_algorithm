@@ -55,5 +55,5 @@
 可以看到，关闭两个节点后，故障节点已经超出了pbft的允许数量，消息进行到Prepare阶段由于接收不到满足数量的信息，固系统不再进行commit确认,客户端也接收不到reply
 ![在这里插入图片描述](images/关闭两个节点.png)
 
->**&ensp;&ensp;&ensp;建了个QQ群：722124200     有问题可以加群互相讨论   ：）**
->**&ensp;&ensp;&ensp;邮箱:mikesen1994@gmail.com   &ensp;&ensp;&ensp;&ensp;&ensp;&ensp; &ensp;&ensp; &ensp;&ensp;&ensp;&ensp; &ensp; vx:965952482**
+>**&ensp;&ensp;&ensp;建了个QQ群：722124200     有问题可以加群互相讨论   ：）** \
+>**&ensp;&ensp;&ensp;邮箱:mikesen1994@gmail.com  &ensp;&ensp;&ensp; vx:965952482**
