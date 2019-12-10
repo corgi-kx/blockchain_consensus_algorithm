@@ -36,26 +36,26 @@
 ```
 
 ##### 2.开启三个端口，并分别执行raft.exe A 、raft.exe B 、 raft.exe C，代表开启三个节点（初始状态为追随者）
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203150827248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/开启端口.png)
 
 ##### 3.三个节点会随机选举出领导者（其中A节点默认监听来自http的访问）,成功的节点会发送心跳检测到其他两个节点
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2019120315303286.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/选举成功.png)
 ##### 4.此时打开浏览器用http访问本地节点8080端口，带上节点需要同步打印的消息，比如：
 `http://localhost:8080/req?message=噢，我的上帝呀`
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203153651866.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/打印消息.png)
 可以看到三个节点同时打印了消息，本段数据同步步骤可以用下图进行理解（不过缺少了4.1步骤）
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203154033684.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/消息同步.png)
 ##### 5.如果领导者节点宕机了怎么办呢，我们尝试关闭领导者节点B
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203155657152.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/领导者节点宕机.png)
 可以发现关闭领导者B后，节点间有个超时机制，如果超过一定时间没有收到心跳检测，则会自动开始重新进行选举，此时A当选了新的领导者
 
 ##### 6.再次打开浏览器用http访问本地节点8080端口，带上节点需要同步打印的消息，看看还能同步打印吗
 `http://localhost:8080/req?message=天气不错`
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20191203160141962.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/残缺打印.png)
 结果发现可以打印的，因为新的领导者A、追随者C并没有宕机，A收到了C的回馈(2>3/2)超过了全网一半的节点，所以是可以进行打印数据的
 
 ##### 7.重新启动节点B，B自动变为追随者状态，并接收来自新的领导者A的心跳检测
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2019120409014310.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](images/重启B.png)
 <hr>
 
 >参考资料：
