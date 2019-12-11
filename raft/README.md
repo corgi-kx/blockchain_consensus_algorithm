@@ -3,7 +3,7 @@
 <hr>
 
 
-本demo为raft的代码实现，如果想了解raft的详细信息请自行谷歌<br>
+本demo为raft的代码实现，如果想了解raft的详细信息请自行浏览参考资料<br>
 本demo展示了raft的部分功能，写的并不严谨，仅作为对raft的了解用途
 <br>
 
