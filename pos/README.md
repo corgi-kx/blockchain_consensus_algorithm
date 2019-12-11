@@ -1,6 +1,5 @@
 <br>
 
-源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/pos](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/pos)
 <br>
 >权益证明机制最开始是由点点币提出并应用（出块概率=代币数量 * 币龄） 简单来说谁的币多，谁就有更大的出块概率。但是深挖下去，这个出块概率谁来计算？碰到无成本利益关系问题怎么办?这个共识算法初看很简单，实际有很多问题需要解决，且看以太坊什么时候能完全转换到POS机制吧
 
