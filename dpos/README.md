@@ -1,7 +1,4 @@
-<br>
 
-源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/dpos](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/dpos)
-<br>
 >股份授权证明机制是POS的一个变种，简单来说就是你手里有选票（币就相当于选票）。这时一些正在竞选超级节点的大节点们说把票都投给我把，等我当选了超级节点，我吃肉你喝汤，岂不美哉？然后你就信了，把票投给了竞选节点，这些节点竞选成功成为超级节点后会轮循的获得出块权。旷工费、通胀放出的代币也就都到了他们手里了。比较中心化的一种共识机制，但是TPS很高。
 
 <br>
