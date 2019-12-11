@@ -1,23 +1,13 @@
-package main
+<br>
 
-import (
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"log"
-	"math/big"
-	"sort"
-	"strconv"
-	"time"
-)
+源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/dpos](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/dpos)
+<br>
+>股份授权证明机制是POS的一个变种，简单来说就是你手里有选票（币就相当于选票）。这时一些正在竞选超级节点的大节点们说把票都投给我把，等我当选了超级节点，我吃肉你喝汤，岂不美哉？然后你就信了，把票投给了竞选节点，这些节点竞选成功成为超级节点后会轮循的获得出块权。旷工费、通胀放出的代币也就都到了他们手里了。比较中心化的一种共识机制，但是TPS很高。
 
-const (
-	voteNodeNum      = 100
-	superNodeNum     = 10
-	mineSuperNodeNum = 3
-)
+<br>
 
+区块结构：
+```go
 type block struct {
 	//上一个块的hash
 	prehash string
@@ -32,51 +22,53 @@ type block struct {
 	//挖出本块的节点地址
 	address string
 }
+```
 
+```go
 //用于存储区块链
 var blockchain []block
-
 //普通节点
-type node struct {
+type node struct{
 	//代币数量
 	votes int
 	//节点地址
 	address string
 }
-
 //竞选节点
 type superNode struct {
-	node
+	 node
 }
-
 //投票节点池
 var voteNodesPool []node
-
 //竞选节点池
 var starNodesPool []superNode
-
 //存放可以挖矿的超级节点池
 var superStarNodesPool []superNode
+```
 
-//生成新的区块
-func generateNewBlock(oldBlock block, data string, address string) block {
-	newBlock := block{}
-	newBlock.prehash = oldBlock.hash
-	newBlock.data = data
-	newBlock.timestamp = time.Now().Format("2006-01-02 15:04:05")
-	newBlock.height = oldBlock.height + 1
-	newBlock.address = address
-	newBlock.getHash()
-	return newBlock
+初始化：\
+生成投票节点池并随机赋予代币数量，同时为竞选节点池生成竞选节点
+```go
+//初始化
+func init() {
+	//初始化投票节点
+	for i:=0;i<=voteNodeNum;i++ {
+		rInt,err:=rand.Int(rand.Reader,big.NewInt(10000))
+		if err != nil {
+			log.Panic(err)
+		}
+		voteNodesPool = append(voteNodesPool,node{int(rInt.Int64()),"投票节点"+strconv.Itoa(i)})
+	}
+	//初始化超级节点
+	for i:=0;i<=superNodeNum;i++ {
+		starNodesPool = append(starNodesPool,superNode{node{0,"超级节点"+strconv.Itoa(i)}})
+	}
 }
+```
 
-//对自身进行散列
-func (b *block) getHash() {
-	sumString := b.prehash + b.timestamp + b.data + b.address + strconv.Itoa(b.height)
-	hash := sha256.Sum256([]byte(sumString))
-	b.hash = hex.EncodeToString(hash[:])
-}
 
+模拟普通节点投票（随机的对竞选节点投票）
+```go
 //投票
 func voting() {
 	for _, v := range voteNodesPool {
@@ -87,7 +79,10 @@ func voting() {
 		starNodesPool[int(rInt.Int64())].votes += v.votes
 	}
 }
+```
 
+对竞选节点根据得票数排序，前几名成为超级节点
+```go
 //对挖矿节点进行排序
 func sortMineNodes() {
 	sort.Slice(starNodesPool, func(i, j int) bool {
@@ -95,23 +90,10 @@ func sortMineNodes() {
 	})
 	superStarNodesPool = starNodesPool[:mineSuperNodeNum]
 }
+```
 
-//初始化
-func init() {
-	//初始化投票节点
-	for i := 0; i <= voteNodeNum; i++ {
-		rInt, err := rand.Int(rand.Reader, big.NewInt(10000))
-		if err != nil {
-			log.Panic(err)
-		}
-		voteNodesPool = append(voteNodesPool, node{int(rInt.Int64()), "投票节点" + strconv.Itoa(i)})
-	}
-	//初始化竞选节点
-	for i := 0; i <= superNodeNum; i++ {
-		starNodesPool = append(starNodesPool, superNode{node{0, "超级节点" + strconv.Itoa(i)}})
-	}
-}
-
+主函数
+```go
 func main() {
 	fmt.Println("初始化", voteNodeNum, "个投票节点...")
 	fmt.Println(voteNodesPool)
@@ -137,6 +119,10 @@ func main() {
 		fmt.Println(blockchain[i+1])
 		i++
 		j++
-		j = j % len(superStarNodesPool)  //超级节点轮循获得出块权
+		j = j % len(superStarNodesPool)
 	}
 }
+```
+
+运行结果：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20191211162452121.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
