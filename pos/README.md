@@ -1,15 +1,13 @@
-package main
+<br>
 
-import (
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"log"
-	"math/big"
-	"strconv"
-	"time"
-)
+源码地址：[https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/pos](https://github.com/corgi-kx/blockchain_consensus_algorithm/tree/master/pos)
+<br>
+>权益证明机制最开始是由点点币提出并应用（出块概率=代币数量 * 币龄） 简单来说谁的币多，谁就有更大的出块概率。但是深挖下去，这个出块概率谁来计算？碰到无成本利益关系问题怎么办?这个共识算法初看很简单，实际有很多问题需要解决，且看以太坊什么时候能完全转换到POS机制吧
+
+<br>
+
+区块结构
+```go
 type block struct {
 	//上一个块的hash
 	prehash string
@@ -24,6 +22,11 @@ type block struct {
 	//挖出本块的地址
 	address string
 }
+```
+声明两个节点池\
+mineNodesPool 用来存放指定的挖矿节点\
+probabilityNodesPool  用于存入挖矿节点的代币数量*币龄获得的概率
+```go
 //用于存储区块链
 var blockchain []block
 //代表挖矿节点
@@ -39,7 +42,9 @@ type node struct{
 var mineNodesPool []node
 //概率节点池
 var  probabilityNodesPool []node
-
+```
+初始化节点池：
+```go
 func init () {
 	//手动添加两个节点
 	mineNodesPool = append(mineNodesPool,node{1000,1,"AAAAAAAAAA"})
@@ -47,40 +52,27 @@ func init () {
 	//初始化随机节点池（挖矿概率与代币数量和币龄有关）
 	for _,v:=range mineNodesPool{
 		for i:=0;i<=v.tokens * v.days; i ++ {
-			probabilityNodesPool = append(probabilityNodesPool,v)
+			randNodesPool = append(randNodesPool,v)
 		}
 	}
 }
-
-//生成新的区块
-func generateNewBlock(oldBlock block,data string,address string) block {
-	newBlock:=block{}
-	newBlock.prehash = oldBlock.hash
-	newBlock.data = data
-	newBlock.timestamp = time.Now().Format("2006-01-02 15:04:05")
-	newBlock.height = oldBlock.height + 1
-	newBlock.address = getMineNodeAddress()
-	newBlock.getHash()
-	return newBlock
-}
-//对自身进行散列
-func ( b *block) getHash () {
-	sumString:= b.prehash + b.timestamp + b.data + b.address + strconv.Itoa(b.height)
-	hash:=sha256.Sum256([]byte(sumString))
-	b.hash = hex.EncodeToString(hash[:])
-}
+```
+每次挖矿都会从概率节点池中随机选出获得出块权的节点地址
+```go
 //随机得出挖矿地址（挖矿概率跟代币数量与币龄有关）
 func getMineNodeAddress() string{
-	bInt:=big.NewInt(int64(len(probabilityNodesPool)))
+	bInt:=big.NewInt(int64(len(randNodesPool)))
 	//得出一个随机数，最大不超过随机节点池的大小
 	rInt,err:=rand.Int(rand.Reader,bInt)
 	if err != nil {
 		log.Panic(err)
 	}
-	return probabilityNodesPool[int(rInt.Int64())].address
+	return randNodesPool[int(rInt.Int64())].address
 }
+```
 
 
+```go
 func main() {
 	//创建创世区块
 	genesisBlock := block{"0000000000000000000000000000000000000000000000000000000000000000","",time.Now().Format("2006-01-02 15:04:05"),"我是创世区块",1,"0000000000"}
@@ -97,3 +89,7 @@ func main() {
 		i++
 	}
 }
+```
+
+运行结果：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20191211154915783.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
