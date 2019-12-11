@@ -1,21 +1,13 @@
-package main
+<br>
 
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"log"
-	"math/big"
-	"strconv"
-	"time"
-)
 
-//用于存放区块,以便连接成区块链
-var blockchain []block
-//挖矿难度值
-var diffNum uint= 17
 
+>工作量证明机制的核心在于不断hash区块自身，将hash值与根据难度值计算出的一串大数对比，如果自身hash小于大数则说明挖矿成功，否则变化自身随机数重新计算。并且程序会随着出块间隔时间动态调节难度值（比如比特币）
+
+<br>
+
+区块结构
+```go
 type block struct {
 	//上一个区块的Hash
 	Lasthash string
@@ -32,7 +24,11 @@ type block struct {
 	//随机数
 	Nonce int64
 }
+```
+挖矿函数：\
+使用math/big包，根据全局变量的难度值diffNum计算出用于实际比较的一串大数newBigint ，并同时将区块hash转换为大数hashInt   两个大数进行数值比较，如果hashInt小于newBigint 则代表挖矿成功
 
+```go
 //区块挖矿（通过自身递增nonce值计算hash）
 func mine(data string) block {
 	if len(blockchain) < 1 {
@@ -65,20 +61,9 @@ func mine(data string) block {
 	}
 	return *newBlock
 }
+```
 
-func (b *block) serialize() []byte {
-	bytes, err := json.Marshal(b)
-	if err != nil {
-		log.Panic(err)
-	}
-	return bytes
-}
-
-func (b *block) getHash() {
-	result := sha256.Sum256(b.serialize())
-	b.Hash = hex.EncodeToString(result[:])
-}
-
+```go
 func main() {
 	//制造一个创世区块
 	genesisBlock := new(block)
@@ -97,4 +82,8 @@ func main() {
 		blockchain = append(blockchain, newBlock)
 		fmt.Println(newBlock)
 	}
-}
+```
+
+运行结果：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20191211145732513.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1OTExMTg0,size_16,color_FFFFFF,t_70)
+

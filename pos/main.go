@@ -56,7 +56,7 @@ func ( b *block) getHash () {
 	hash:=sha256.Sum256([]byte(sumString))
 	b.hash = hex.EncodeToString(hash[:])
 }
-//随机挖矿节点
+//随机挖矿节点（挖矿概率跟代币数量与币龄有关）
 func getMineNodeAddress() string{
 	bInt:=big.NewInt(int64(len(randNodesPool)))
 	rInt,err:=rand.Int(rand.Reader,bInt)
@@ -75,11 +75,15 @@ func intiRandNodePool() {
 }
 
 func main() {
+	//手动添加两个节点
 	mineNodesPool = append(mineNodesPool,node{1000,1,"AAAAAAAAAA"})
 	mineNodesPool = append(mineNodesPool,node{100,3,"BBBBBBBBBB"})
+	//初始化随机节点池（挖矿概率与代币数量和币龄有关）
 	intiRandNodePool()
+	//创建创世区块
 	genesisBlock := block{"0000000000000000000000000000000000000000000000000000000000000000","",time.Now().Format("2006-01-02 15:04:05"),"我是创世区块",1,"0000000000"}
 	genesisBlock.getHash()
+	//把创世区块添加进区块链
 	blockchain = append(blockchain,genesisBlock)
 	fmt.Println(blockchain[0])
 	i:=0

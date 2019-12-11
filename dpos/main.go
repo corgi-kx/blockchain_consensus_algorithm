@@ -34,14 +34,14 @@ type block struct {
 }
 //用于存储区块链
 var blockchain []block
-//代表挖矿节点
+//普通节点
 type node struct{
 	//代币数量
 	votes int
 	//节点地址
 	address string
 }
-
+//竞选节点
 type superNode struct {
 	 node
 }
@@ -107,28 +107,18 @@ func init() {
 
 func main() {
 	fmt.Println("初始化",voteNodeNum,"个投票节点...")
-	time.Sleep(time.Second*2)
 	fmt.Println(voteNodesPool)
-	time.Sleep(time.Second*2)
 	fmt.Println("当前存在的",superNodeNum,"个竞选节点")
 	fmt.Println(starNodesPool)
-	time.Sleep(time.Second*2)
-	fmt.Println("进行投票...")
-	time.Sleep(time.Second*2)
+	fmt.Println("投票节点们开始进行投票...")
 	voting()
-	time.Sleep(time.Second*2)
 	fmt.Println("结束投票，查看竞选节点们获得票数...")
-	time.Sleep(time.Second*2)
 	fmt.Println(starNodesPool)
-	time.Sleep(time.Second*2)
-	fmt.Println("对竞选节点进行排序，前",mineSuperNodeNum,"名，当选超级节点")
-	time.Sleep(time.Second*2)
+	fmt.Println("对竞选节点按获得票数排序，前",mineSuperNodeNum,"名，当选超级节点")
 	sortMineNodes()
 	fmt.Println(superStarNodesPool)
-	time.Sleep(time.Second*2)
 	fmt.Println("开始挖矿...")
-	time.Sleep(time.Second*2)
-	genesisBlock := block{"0000000000000000000000000000000000000000000000000000000000000000","",time.Now().Format("2006-01-02 15:04:05"),"我是创世区块",1,"0000000000"}
+	genesisBlock := block{"0000000000000000000000000000000000000000000000000000000000000000","",time.Now().Format("2006-01-02 15:04:05"),"我是创世区块",1,"000000000"}
 	genesisBlock.getHash()
 	blockchain = append(blockchain,genesisBlock)
 	fmt.Println(blockchain[0])
