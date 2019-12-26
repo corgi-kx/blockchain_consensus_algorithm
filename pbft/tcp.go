@@ -15,7 +15,6 @@ func clientTcpListen() {
 	}
 	defer listen.Close()
 
-
 	for {
 		conn, err := listen.Accept()
 		if err != nil {
@@ -36,7 +35,7 @@ func (p *pbft) tcpListen() {
 	if err != nil {
 		log.Panic(err)
 	}
-	fmt.Printf("节点开启监听，地址：%s\n",  p.node.addr)
+	fmt.Printf("节点开启监听，地址：%s\n", p.node.addr)
 	defer listen.Close()
 
 	for {
@@ -48,7 +47,7 @@ func (p *pbft) tcpListen() {
 		if err != nil {
 			log.Panic(err)
 		}
-		 p.handleRequest(b)
+		p.handleRequest(b)
 	}
 
 }

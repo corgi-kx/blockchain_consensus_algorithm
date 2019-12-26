@@ -18,28 +18,28 @@ import (
 func genRsaKeys() {
 	if !isExist("./Keys") {
 		fmt.Println("检测到还未生成公私钥目录，正在生成公私钥 ...")
-		err :=os.Mkdir("Keys",0644)
+		err := os.Mkdir("Keys", 0644)
 		if err != nil {
 			log.Panic()
 		}
-		for i:=0;i<=4;i ++ {
-			if !isExist("./Keys/N"+ strconv.Itoa(i)) {
-				err :=os.Mkdir("./Keys/N"+ strconv.Itoa(i),0644)
+		for i := 0; i <= 4; i++ {
+			if !isExist("./Keys/N" + strconv.Itoa(i)) {
+				err := os.Mkdir("./Keys/N"+strconv.Itoa(i), 0644)
 				if err != nil {
 					log.Panic()
 				}
 			}
-			priv,pub:=getKeyPair()
-			privFileName := "Keys/N"+ strconv.Itoa(i) + "/N"+ strconv.Itoa(i) +"_RSA_PIV"
-			file,err:=os.OpenFile(privFileName,os.O_RDWR|os.O_CREATE,0644)
+			priv, pub := getKeyPair()
+			privFileName := "Keys/N" + strconv.Itoa(i) + "/N" + strconv.Itoa(i) + "_RSA_PIV"
+			file, err := os.OpenFile(privFileName, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
 				log.Panic(err)
 			}
 			defer file.Close()
 			file.Write(priv)
 
-			pubFileName := "Keys/N"+strconv.Itoa(i) +"/N"+ strconv.Itoa(i) +"_RSA_PUB"
-			file2,err:=os.OpenFile(pubFileName,os.O_RDWR|os.O_CREATE,0644)
+			pubFileName := "Keys/N" + strconv.Itoa(i) + "/N" + strconv.Itoa(i) + "_RSA_PUB"
+			file2, err := os.OpenFile(pubFileName, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
 				log.Panic(err)
 			}
@@ -76,15 +76,14 @@ func getKeyPair() (prvkey, pubkey []byte) {
 	return
 }
 
-
 //判断文件或文件夹是否存在
-func isExist(path string)(bool){
+func isExist(path string) bool {
 	_, err := os.Stat(path)
-	if err != nil{
-		if os.IsExist(err){
+	if err != nil {
+		if os.IsExist(err) {
 			return true
 		}
-		if os.IsNotExist(err){
+		if os.IsNotExist(err) {
 			return false
 		}
 		fmt.Println(err)
@@ -135,4 +134,3 @@ func (p *pbft) RsaVerySignWithSha256(data, signData, keyBytes []byte) bool {
 	}
 	return true
 }
-

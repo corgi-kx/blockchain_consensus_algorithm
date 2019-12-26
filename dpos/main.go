@@ -137,6 +137,6 @@ func main() {
 		fmt.Println(blockchain[i+1])
 		i++
 		j++
-		j = j % len(superStarNodesPool)  //超级节点轮循获得出块权
+		j = j % len(superStarNodesPool) //超级节点轮循获得出块权
 	}
 }

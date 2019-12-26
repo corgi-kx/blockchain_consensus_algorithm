@@ -21,7 +21,7 @@ func clientSendMessageAndListen() {
 	fmt.Println("|  已进入PBFT测试Demo客户端，请启动全部节点后再发送消息！ :)  |")
 	fmt.Println(" ---------------------------------------------------------------------------------")
 	fmt.Println("请在下方输入要存入节点的信息：")
-    //首先通过命令行获取用户输入
+	//首先通过命令行获取用户输入
 	stdReader := bufio.NewReader(os.Stdin)
 	for {
 		data, err := stdReader.ReadString('\n')
@@ -29,25 +29,22 @@ func clientSendMessageAndListen() {
 			fmt.Println("Error reading from stdin")
 			panic(err)
 		}
-		r:=new(Request)
+		r := new(Request)
 		r.Timestamp = time.Now().UnixNano()
 		r.ClientAddr = clientAddr
 		r.Message.ID = getRandom()
 		//消息内容就是用户的输入
 		r.Message.Content = strings.TrimSpace(data)
-		br,err:=json.Marshal(r)
+		br, err := json.Marshal(r)
 		if err != nil {
 			log.Panic(err)
 		}
 		fmt.Println(string(br))
-		content:=jointMessage(cRequest,br)
+		content := jointMessage(cRequest, br)
 		//默认N0为主节点，直接把请求信息发送至N0
-		tcpDial(content,nodeTable["N0"])
+		tcpDial(content, nodeTable["N0"])
 	}
 }
-
-
-
 
 //返回一个十位数的随机数，作为msgid
 func getRandom() int {
@@ -62,5 +59,3 @@ func getRandom() int {
 		}
 	}
 }
-
-

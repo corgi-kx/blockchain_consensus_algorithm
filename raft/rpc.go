@@ -91,13 +91,13 @@ func (rf *Raft) ReceiveMessage(message Message, b *bool) error {
 //追随者节点的反馈得到领导者节点的确认，开始打印消息
 func (rf *Raft) ConfirmationMessage(message Message, b *bool) error {
 	go func() {
-		for{
-			if _,ok:= MessageStore[message.MsgID];ok {
+		for {
+			if _, ok := MessageStore[message.MsgID]; ok {
 				fmt.Printf("raft验证通过，可以打印消息，id为：%d\n", message.MsgID)
-				fmt.Println("消息为：", MessageStore[message.MsgID],"\n")
+				fmt.Println("消息为：", MessageStore[message.MsgID], "\n")
 				rf.lastMessageTime = millisecond()
 				break
-			}else {
+			} else {
 				//如果没有此消息，等一会看看!!!
 				time.Sleep(time.Millisecond * 10)
 			}
@@ -117,21 +117,21 @@ func (rf *Raft) LeaderReceiveMessage(message Message, b *bool) error {
 	num := 0
 	go rf.broadcast("Raft.ReceiveMessage", message, func(ok bool) {
 		if ok {
-			num ++
+			num++
 		}
 	})
 
 	for {
 		//自己默认收到了消息，所以减去一
-		if num > raftCount/2 -1  {
-			fmt.Printf("全网已超过半数节点接收到消息id：%d\nraft验证通过，可以打印消息，id为：%d\n",message.MsgID,message.MsgID)
-			fmt.Println("消息为：", MessageStore[message.MsgID],"\n")
+		if num > raftCount/2-1 {
+			fmt.Printf("全网已超过半数节点接收到消息id：%d\nraft验证通过，可以打印消息，id为：%d\n", message.MsgID, message.MsgID)
+			fmt.Println("消息为：", MessageStore[message.MsgID], "\n")
 			rf.lastMessageTime = millisecond()
 			fmt.Println("准备将消息提交信息发送至客户端...")
 			go rf.broadcast("Raft.ConfirmationMessage", message, func(ok bool) {
 			})
 			break
-		}else  {
+		} else {
 			//休息会儿
 			time.Sleep(time.Millisecond * 100)
 		}

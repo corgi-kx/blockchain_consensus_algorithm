@@ -9,6 +9,7 @@ import (
 
 //定义节点数量
 var raftCount = 3
+
 //节点池
 var nodeTable map[string]string
 

@@ -13,8 +13,9 @@ import (
 
 //用于存放区块,以便连接成区块链
 var blockchain []block
+
 //挖矿难度值
-var diffNum uint= 17
+var diffNum uint = 17
 
 type block struct {
 	//上一个区块的Hash
@@ -93,7 +94,7 @@ func main() {
 	//将创世区块添加进区块链
 	blockchain = append(blockchain, *genesisBlock)
 	for i := 0; i < 10; i++ {
-		newBlock := mine("天气不错"+strconv.Itoa(i))
+		newBlock := mine("天气不错" + strconv.Itoa(i))
 		blockchain = append(blockchain, newBlock)
 		fmt.Println(newBlock)
 	}

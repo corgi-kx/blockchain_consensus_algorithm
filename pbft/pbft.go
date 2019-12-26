@@ -15,13 +15,13 @@ var localMessagePool = []Message{}
 
 type node struct {
 	//节点ID
-	nodeID     string
+	nodeID string
 	//节点监听地址
-	addr       string
+	addr string
 	//RSA私钥
 	rsaPrivKey []byte
 	//RSA公钥
-	rsaPubKey  []byte
+	rsaPubKey []byte
 }
 
 type pbft struct {
@@ -47,8 +47,8 @@ func NewPBFT(nodeID, addr string) *pbft {
 	p := new(pbft)
 	p.node.nodeID = nodeID
 	p.node.addr = addr
-	p.node.rsaPrivKey = p.getPivKey(nodeID)  //从生成的私钥文件处读取
-	p.node.rsaPubKey = p.getPubKey(nodeID)	//从生成的私钥文件处读取
+	p.node.rsaPrivKey = p.getPivKey(nodeID) //从生成的私钥文件处读取
+	p.node.rsaPubKey = p.getPubKey(nodeID)  //从生成的私钥文件处读取
 	p.sequenceID = 0
 	p.messagePool = make(map[string]Request)
 	p.prePareConfirmCount = make(map[string]map[string]bool)
@@ -63,13 +63,13 @@ func (p *pbft) handleRequest(data []byte) {
 	cmd, content := splitMessage(data)
 	switch command(cmd) {
 	case cRequest:
-		 p.handleClientRequest(content)
+		p.handleClientRequest(content)
 	case cPrePrepare:
-		 p.handlePrePrepare(content)
+		p.handlePrePrepare(content)
 	case cPrepare:
-		 p.handlePrepare(content)
+		p.handlePrepare(content)
 	case cCommit:
-		 p.handleCommit(content)
+		p.handleCommit(content)
 	}
 }
 
@@ -164,7 +164,7 @@ func (p *pbft) handlePrepare(content []byte) {
 	} else {
 		p.setPrePareConfirmMap(pre.Digest, pre.NodeID, true)
 		count := 0
-		for _, _ = range p.prePareConfirmCount[pre.Digest] {
+		for range p.prePareConfirmCount[pre.Digest] {
 			count++
 		}
 		//因为主节点不会发送Prepare，所以不包含自己
@@ -217,7 +217,7 @@ func (p *pbft) handleCommit(content []byte) {
 	} else {
 		p.setCommitConfirmMap(c.Digest, c.NodeID, true)
 		count := 0
-		for _, _ = range p.commitConfirmCount[c.Digest] {
+		for range p.commitConfirmCount[c.Digest] {
 			count++
 		}
 		//如果节点至少收到了2f+1个commit消息（包括自己）,并且节点没有回复过,并且已进行过commit广播，则提交信息至本地消息池，并reply成功标志至客户端！
@@ -246,7 +246,7 @@ func (p *pbft) sequenceIDAdd() {
 
 //向除自己外的其他节点进行广播
 func (p *pbft) broadcast(cmd command, content []byte) {
-	for i, _ := range nodeTable {
+	for i := range nodeTable {
 		if i == p.node.nodeID {
 			continue
 		}
